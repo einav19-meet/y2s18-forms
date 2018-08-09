@@ -8,7 +8,7 @@ def home():
 
 @app.route('/student/<int:student_id>')
 def display_student(student_id):
-    return render_template('student.html', student=query_by_id(student_id))
+    return render_template('student.html', student=query_by_id(student_id),id=student_id)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_student_route():
@@ -18,5 +18,16 @@ def add_student_route():
 		add_student(request.form['student_name'],
 			request.form['student_year'], False)
 		return render_template('add.html')
+
+@app.route('/delete/<int:student_id>',methods=['GET','POST'])
+def delete_me(student_id):
+	print ("we are here!")
+	print(request.method )
+	if request.method == 'POST':
+		session.query(Student).filter_by(
+			student_id=student_id).delete()
+		session.commit()
+		return render_template('delete.html')
+
 
 app.run(debug=True)
